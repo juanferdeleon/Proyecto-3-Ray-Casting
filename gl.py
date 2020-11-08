@@ -1,5 +1,6 @@
 import pygame
 from math import cos, sin, pi, atan2
+import math
 
 WHITE = (255,255,255)
 BLACK = (0,0,0)
@@ -7,24 +8,24 @@ SPRITE_BACKGROUND = (152, 0, 136, 255)
 
 
 textures = {
-    '1' : pygame.image.load('wall1.png'),
-    '2' : pygame.image.load('wall2.png'),
-    '3' : pygame.image.load('wall3.png'),
-    '4' : pygame.image.load('wall4.png'),
-    '5' : pygame.image.load('wall5.png')
+    '1' : pygame.image.load('./img/walls/wall1.png'),
+    '2' : pygame.image.load('./img/walls/wall2.png'),
+    '3' : pygame.image.load('./img/walls/wall3.png'),
+    '4' : pygame.image.load('./img/walls/wall4.png'),
+    '5' : pygame.image.load('./img/walls/wall5.png')
     }
 
 enemies = [{"x": 100,
             "y": 200,
-            "texture" : pygame.image.load('sprite1.png')},
+            "texture" : pygame.image.load('./img/sprites/soldier/1.png')},
 
            {"x": 270,
             "y": 200,
-            "texture" : pygame.image.load('sprite2.png')},
+            "texture" : pygame.image.load('./img/sprites/soldier/1.png')},
 
            {"x": 320,
             "y": 420,
-            "texture" : pygame.image.load('sprite3.png')}    
+            "texture" : pygame.image.load('./img/sprites/soldier/1.png')}    
     ]
 
 
@@ -47,6 +48,59 @@ class Raycaster(object):
             "angle" : 30,
             "fov" : 60
             }
+
+    def movement(self):
+        '''Player movement'''
+        self.keys_control()
+        self.mouse_control()
+
+    def mouse_control(self):
+        '''Mouse control'''
+        if pygame.mouse.get_focused():
+            halfWidth = int(self.width / 2)
+            halfHeight = int(self.height / 2)
+
+            difference = pygame.mouse.get_pos()[0] - halfWidth - 250
+            pygame.mouse.set_pos([halfWidth + 250, halfHeight])
+            self.player['angle'] += difference * 0.08
+
+
+    def keys_control(self):
+        '''Movement with keyboard'''
+
+        for ev in pygame.event.get():
+            if ev.type == pygame.QUIT:
+                exit()
+
+            newX = self.player['x']
+            newY = self.player['y']
+
+            if ev.type == pygame.KEYDOWN:
+                if ev.key == pygame.K_ESCAPE:
+                    isRunning = False
+                elif ev.key == pygame.K_w:
+                    newX += cos(self.player['angle'] * pi / 180) * self.stepSize
+                    newY += sin(self.player['angle'] * pi / 180) * self.stepSize
+                elif ev.key == pygame.K_s:
+                    newX -= cos(self.player['angle'] * pi / 180) * self.stepSize
+                    newY -= sin(self.player['angle'] * pi / 180) * self.stepSize
+                elif ev.key == pygame.K_a:
+                    newX -= cos((self.player['angle'] + 90) * pi / 180) * self.stepSize
+                    newY -= sin((self.player['angle'] + 90) * pi / 180) * self.stepSize
+                elif ev.key == pygame.K_d:
+                    newX += cos((self.player['angle'] + 90) * pi / 180) * self.stepSize
+                    newY += sin((self.player['angle'] + 90) * pi / 180) * self.stepSize
+                elif ev.key == pygame.K_q:
+                    self.player['angle'] -= 5
+                elif ev.key == pygame.K_e:
+                    self.player['angle'] += 5
+
+                i = int(newX / self.blocksize)
+                j = int(newY / self.blocksize)
+
+                if self.map[j][i] == ' ':
+                    self.player['x'] = newX
+                    self.player['y'] = newY
 
     def load_map(self, filename):
         with open(filename) as f:

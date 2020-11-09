@@ -1,4 +1,5 @@
 import pygame
+from pygame import mixer
 from math import cos, sin, pi, atan2
 import math
 
@@ -30,7 +31,6 @@ enemies = [{"x": 100,
             "texture" : pygame.image.load('./img/sprites/coins/coin1.png'),
             "coin_num": 2}    
     ]
-
 
 class Raycaster(object):
     def __init__(self,screen):
@@ -66,66 +66,16 @@ class Raycaster(object):
         for enemy in enemies:
             if x_min <= enemy['x'] <= x_max and y_min <= enemy['y'] <= y_max:
                 self.player['score'] += 1
+                
+                # Coin Noise
+                mixer.music.load('./sounds/coins/coin1.mp3')
+                mixer.music.play()
+
                 enemy_collided = enemy
 
         if enemy_collided != None:
             enemies.remove(enemy_collided)
             enemy_collided = None
-
-
-
-    def movement(self):
-        '''Player movement'''
-        self.keys_control()
-        self.mouse_control()
-
-    def mouse_control(self):
-        '''Mouse control'''
-        if pygame.mouse.get_focused():
-            halfWidth = int(self.width / 2)
-            halfHeight = int(self.height / 2)
-
-            difference = pygame.mouse.get_pos()[0] - halfWidth - 250
-            pygame.mouse.set_pos([halfWidth + 250, halfHeight])
-            self.player['angle'] += difference * 0.08
-
-
-    def keys_control(self):
-        '''Movement with keyboard'''
-
-        for ev in pygame.event.get():
-            if ev.type == pygame.QUIT:
-                exit()
-
-            newX = self.player['x']
-            newY = self.player['y']
-
-            if ev.type == pygame.KEYDOWN:
-                if ev.key == pygame.K_ESCAPE:
-                    isRunning = False
-                elif ev.key == pygame.K_w:
-                    newX += cos(self.player['angle'] * pi / 180) * self.stepSize
-                    newY += sin(self.player['angle'] * pi / 180) * self.stepSize
-                elif ev.key == pygame.K_s:
-                    newX -= cos(self.player['angle'] * pi / 180) * self.stepSize
-                    newY -= sin(self.player['angle'] * pi / 180) * self.stepSize
-                elif ev.key == pygame.K_a:
-                    newX -= cos((self.player['angle'] + 90) * pi / 180) * self.stepSize
-                    newY -= sin((self.player['angle'] + 90) * pi / 180) * self.stepSize
-                elif ev.key == pygame.K_d:
-                    newX += cos((self.player['angle'] + 90) * pi / 180) * self.stepSize
-                    newY += sin((self.player['angle'] + 90) * pi / 180) * self.stepSize
-                elif ev.key == pygame.K_q:
-                    self.player['angle'] -= 5
-                elif ev.key == pygame.K_e:
-                    self.player['angle'] += 5
-
-                i = int(newX / self.blocksize)
-                j = int(newY / self.blocksize)
-
-                if self.map[j][i] == ' ':
-                    self.player['x'] = newX
-                    self.player['y'] = newY
 
     def load_map(self, filename):
         with open(filename) as f:
@@ -198,7 +148,7 @@ class Raycaster(object):
 
                 return dist, self.map[j][i], tx
 
-            self.screen.set_at((x,y), WHITE)
+            # self.screen.set_at((x,y), WHITE)
 
             dist += 2
 

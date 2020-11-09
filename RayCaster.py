@@ -29,39 +29,7 @@ while isRunning:
 
     r.movement()
 
-    # for ev in pygame.event.get():
-    #     if ev.type == pygame.QUIT:
-    #         isRunning = False
-
-    #     newX = r.player['x']
-    #     newY = r.player['y']
-
-    #     if ev.type == pygame.KEYDOWN:
-    #         if ev.key == pygame.K_ESCAPE:
-    #             isRunning = False
-    #         elif ev.key == pygame.K_w:
-    #             newX += cos(r.player['angle'] * pi / 180) * r.stepSize
-    #             newY += sin(r.player['angle'] * pi / 180) * r.stepSize
-    #         elif ev.key == pygame.K_s:
-    #             newX -= cos(r.player['angle'] * pi / 180) * r.stepSize
-    #             newY -= sin(r.player['angle'] * pi / 180) * r.stepSize
-    #         elif ev.key == pygame.K_a:
-    #             newX -= cos((r.player['angle'] + 90) * pi / 180) * r.stepSize
-    #             newY -= sin((r.player['angle'] + 90) * pi / 180) * r.stepSize
-    #         elif ev.key == pygame.K_d:
-    #             newX += cos((r.player['angle'] + 90) * pi / 180) * r.stepSize
-    #             newY += sin((r.player['angle'] + 90) * pi / 180) * r.stepSize
-    #         # elif ev.key == pygame.K_q:
-    #         #     r.player['angle'] -= 5
-    #         # elif ev.key == pygame.K_e:
-    #         #     r.player['angle'] += 5
-
-    #         i = int(newX / r.blocksize)
-    #         j = int(newY / r.blocksize)
-
-    #         if r.map[j][i] == ' ':
-    #             r.player['x'] = newX
-    #             r.player['y'] = newY
+    r.coin_collide()
 
     screen.fill(pygame.Color("gray")) #Fondo
 

@@ -17,15 +17,18 @@ textures = {
 
 enemies = [{"x": 100,
             "y": 200,
-            "texture" : pygame.image.load('./img/sprites/soldier/1.png')},
+            "texture" : pygame.image.load('./img/sprites/coins/coin1.png'),
+            "coin_num": 0},
 
            {"x": 270,
             "y": 200,
-            "texture" : pygame.image.load('./img/sprites/soldier/1.png')},
+            "texture" : pygame.image.load('./img/sprites/coins/coin1.png'),
+            "coin_num": 1},
 
            {"x": 320,
             "y": 420,
-            "texture" : pygame.image.load('./img/sprites/soldier/1.png')}    
+            "texture" : pygame.image.load('./img/sprites/coins/coin1.png'),
+            "coin_num": 2}    
     ]
 
 
@@ -46,8 +49,30 @@ class Raycaster(object):
             "x" : 75,
             "y" : 175,
             "angle" : 30,
-            "fov" : 60
+            "fov" : 60,
+            "score": 0
             }
+
+    def coin_collide(self):
+        '''Verify if player collides with coins'''
+
+        x_min = self.player['x'] - 10
+        x_max = self.player['x'] + 10
+        y_min = self.player['y'] - 10
+        y_max = self.player['y'] + 10
+
+        enemy_collided = None
+
+        for enemy in enemies:
+            if x_min <= enemy['x'] <= x_max and y_min <= enemy['y'] <= y_max:
+                self.player['score'] += 1
+                enemy_collided = enemy
+
+        if enemy_collided != None:
+            enemies.remove(enemy_collided)
+            enemy_collided = None
+
+
 
     def movement(self):
         '''Player movement'''

@@ -56,10 +56,10 @@ class Raycaster(object):
     def coin_collide(self):
         '''Verify if player collides with coins'''
 
-        x_min = self.player['x'] - 10
-        x_max = self.player['x'] + 10
-        y_min = self.player['y'] - 10
-        y_max = self.player['y'] + 10
+        x_min = self.player['x'] - 15
+        x_max = self.player['x'] + 15
+        y_min = self.player['y'] - 15
+        y_max = self.player['y'] + 15
 
         enemy_collided = None
 
